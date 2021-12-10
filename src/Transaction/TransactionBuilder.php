@@ -91,6 +91,8 @@ class TransactionBuilder implements XdrEncodableInterface
      * @var VariableArray[]
      */
     private $operations;
+    
+    private $operationFee = 100;
 
     /**
      * Horizon API client, used for retrieving sequence numbers and validating
@@ -227,11 +229,15 @@ class TransactionBuilder implements XdrEncodableInterface
 
         return $this->apiClient->submitTransaction($this, $secretKeyString);
     }
+    
+    public function setOperationFee($fee)
+    {
+        $this->operationFee = $fee;
+    }
 
     public function getFee()
     {
-        // todo: load base fee from network
-        return 100 * $this->operations->count();
+        return $this->operationFee * $this->operations->count();
     }
 
     /**
